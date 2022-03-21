@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+cd `dirname $0`
+
+# Download data (only needs to be done once)
+./download_data
+
+# Execute a single experiment of each dataset
+# - Note that the paper performs 5 experiments and takes the mean of their performance
+./run_ctu13_scenario_5
+./run_ctu13_scenario_6
+./run_unsw_nb15
+./run_cicids2017_wednesday
+./run_cicids2017_thursday
+./run_cicids2017_friday

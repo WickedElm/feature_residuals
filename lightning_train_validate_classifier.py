@@ -620,14 +620,6 @@ class SklearnTrainerCallback(Callback):
             target_names=['benign','attack']
         )
 
-        add_metric_to_db(EXPERIMENTS_DB, f'{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'precision', self.prec)
-        add_metric_to_db(EXPERIMENTS_DB, f'{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'recall', self.rec)
-        add_metric_to_db(EXPERIMENTS_DB, f'{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'f1_score', self.f1)
-        add_metric_to_db(EXPERIMENTS_DB, f'{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'accuracy', self.val_acc)
-
-        if hasattr(self.model.model, 'oob_score_'):
-            add_metric_to_db(EXPERIMENTS_DB, f'{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'oob_score', self.val_oob_score)
-
         # Save model
         self.model.feature_names = self.feature_transformer.feature_names
         self.model.save(path=f'{self.opt.results_dir}/{self.opt.save_prefix}_{self.threshold_name}_{self.feature_transformer.__class__.__name__}_{self.model_modulename}_{self.model_classname}-final.pkl')
@@ -683,12 +675,6 @@ class SklearnTrainerCallback(Callback):
         pl_module.log(f'classifier/test_{self.threshold_name}/{self.feature_transformer.__class__.__name__}_recall', self.rec, on_step=False, on_epoch=True)
         pl_module.log(f'classifier/test_{self.threshold_name}/{self.feature_transformer.__class__.__name__}_f1-score', self.f1, on_step=False, on_epoch=True)
         pl_module.log(f'classifier/test_{self.threshold_name}/{self.feature_transformer.__class__.__name__}_accuracy', self.test_acc, on_step=False, on_epoch=True)
-
-        EXPERIMENTS_DB = './output/experiments_db'
-        add_metric_to_db(EXPERIMENTS_DB, f'test/{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'precision', self.prec)
-        add_metric_to_db(EXPERIMENTS_DB, f'test/{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'recall', self.rec)
-        add_metric_to_db(EXPERIMENTS_DB, f'test/{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'f1_score', self.f1)
-        add_metric_to_db(EXPERIMENTS_DB, f'test/{self.feature_transformer.__class__.__name__}_{self.threshold_name}_{self.opt.experiment}', trainer.datamodule.dataset_name, 'accuracy', self.test_acc)
 
 if __name__ == '__main__':
     # Set up general arguments

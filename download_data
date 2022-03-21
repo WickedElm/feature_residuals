@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+tmp_dir=./tmp_ds_data
+base_download_url="https://github.com/WickedElm/feature_residuals/releases/download/v1.0.0"
+
+# Create data directory if needed
+if [ ! -d ${tmp_dir} ];
+then
+    mkdir ${tmp_dir}
+    chmod 755 ${tmp_dir}
+fi
+
+echo "Downloading data."
+
+###
+# Base datasets files.
+###
+wget -q ${base_download_url}/datasets.tar.gz
+tar xfz datasets.tar.gz
+rm -f datasets.tar.gz
+
+###
+# CTU13 Scenario 5
+###
+training_file=conference_sf_scenario_5_full_loop_testing_train.pkl
+validation_file=conference_sf_scenario_5_full_loop_testing_validation.pkl
+test_file=conference_sf_scenario_5_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# CTU13 Scenario 6
+###
+training_file=conference_sf_scenario_6_full_loop_testing_train.pkl
+validation_file=conference_sf_scenario_6_full_loop_testing_validation.pkl
+test_file=conference_sf_scenario_6_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# UNSW-NB15
+###
+training_file=conference_sf_unsw_nb15_full_loop_testing_train.pkl
+validation_file=conference_sf_unsw_nb15_full_loop_testing_validation.pkl
+test_file=conference_sf_unsw_nb15_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# Monday
+###
+training_file=conference_sf_monday_full_loop_testing_train.pkl
+validation_file=conference_sf_monday_full_loop_testing_validation.pkl
+test_file=conference_sf_monday_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# Wednesday
+###
+training_file=conference_sf_wednesday_full_loop_testing_train.pkl
+validation_file=conference_sf_wednesday_full_loop_testing_validation.pkl
+test_file=conference_sf_wednesday_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# Thursday
+###
+training_file=conference_sf_thursday_full_loop_testing_train.pkl
+validation_file=conference_sf_thursday_full_loop_testing_validation.pkl
+test_file=conference_sf_thursday_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+###
+# Friday
+###
+training_file=conference_sf_friday_full_loop_testing_train.pkl
+validation_file=conference_sf_friday_full_loop_testing_validation.pkl
+test_file=conference_sf_friday_full_loop_testing_test.pkl
+
+wget -q ${base_download_url}/${training_file} -O ${tmp_dir}/${training_file}
+wget -q ${base_download_url}/${test_file} -O ${tmp_dir}/${test_file}
+wget -q ${base_download_url}/${validation_file} -O ${tmp_dir}/${validation_file}
+
+echo "Downloading complete."

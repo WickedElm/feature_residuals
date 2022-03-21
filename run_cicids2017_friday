@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+cd `dirname $0`
+
+tmp_dir=./tmp_ds_data
+output_dir=./output
+base_download_url="https://github.com/WickedElm/feature_residuals/releases/download/v1.0.0"
+
+# Create data directory if needed
+if [ ! -d ${tmp_dir} ];
+then
+    echo "Data directory not found.  Executing ./download_data"
+    ./download_data
+fi
+
+if [ ! -d ${output_dir} ];
+then
+    mkdir ${output_dir}
+    chmod 755 ${output_dir}
+fi
+
+clf_models="clf_gaussian_naive_bayes.ClfGaussianNaiveBayes clf_knn.ClfKNN clf_random_forest.ClfRandomForest clf_logistic_regression.ClfLogisticRegression clf_linear_svm.ClfLinearSVM"
+feature_transformers="original_feature_transformer.OriginalFeatureTransformer original_s_feature_transformer.OriginalSFeatureTransformer original_s_threshold_feature_transformer.OriginalSThresholdFeatureTransformer"
+
+###
+# CICIDS2017 friday
+###
+training_file=conference_sf_friday_full_loop_testing_train.pkl
+validation_file=conference_sf_friday_full_loop_testing_validation.pkl
+test_file=conference_sf_friday_full_loop_testing_test.pkl
+
+# Get date for results  dir
+cdate=$(date +%Y%m%d)
+cseconds=$(date +%s%N)
+timestamp=${cdate}_${cseconds}
+model=autoencoder_linear_6_bottleneck.AutoencoderLinear6Bottleneck
+feature_transformer=original_feature_transformer.OriginalFeatureTransformer,original_s_feature_transformer.OriginalSFeatureTransformer,original_s_threshold_feature_transformer.OriginalSThresholdFeatureTransformer
+experiment=experiment_1
+save_prefix=cicids2017_friday
+dataset_path=./datasets/cicids2017/sf_friday/sf_friday.pkl
+data_module=NetflowConferenceBenignOnlyTrainingDataModule
+
+for hidden_layer_size in `echo "12"`; do
+    project=${timestamp}_cicids2017_fri_${model}_${hidden_layer_size}
+
+    # Execute autoencoder training
+    python lightning_train_validate.py \
+        --model ${model} \
+        --feature_transformer ${feature_transformer} \
+        --project ${project} \
+        --results_dir ${output_dir}/${project}/${experiment} \
+        --experiment ${experiment} \
+        --group ${experiment} \
+        --dataset_path ${dataset_path} \
+        --data_module ${data_module} \
+        --save_prefix ${save_prefix} \
+        --hidden_layer_size ${hidden_layer_size} \
+        --num_epochs 400 \
+        --lr 1 \
+        --batch_size 32 \
+        --total_rows_threshold 1000000 \
+        --l2 0.01 \
+        --rf_max_features 0.6 \
+        --n_neighbors 5 \
+        --reserve_type full_loop_testing \
+        --s_threshold 0.0001,0.00009 \
+        --load_from_disk \
+        --lambda_filter 1
+
+    # Execute classifier training/test
+
+    for clf_model in `echo ${clf_models}`; do
+        for feature_transformer in `echo ${feature_transformers}`; do
+            python lightning_train_validate_classifier.py \
+                --model ${model} \
+                --clf_model ${clf_model} \
+                --feature_transformer ${feature_transformer} \
+                --project ${project} \
+                --results_dir ${output_dir}/${project}/${experiment} \
+                --experiment ${experiment} \
+                --group ${experiment} \
+                --dataset_path ${dataset_path} \
+                --data_module ${data_module} \
+                --save_prefix ${save_prefix} \
+                --hidden_layer_size ${hidden_layer_size} \
+                --num_epochs 400 \
+                --lr 1  \
+                --batch_size 32  \
+                --total_rows_threshold 1000000  \
+                --l2 0.01  \
+                --rf_max_features 0.6  \
+                --n_neighbors 5  \
+                --reserve_type full_loop_testing  \
+                --s_threshold 0.0001,0.00009  \
+                --load_from_disk  \
+                --lambda_filter 1  \
+                --use_all_training_data  \
+                --sklearn
+        done
+    done
+done
