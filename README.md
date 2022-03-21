@@ -6,7 +6,7 @@ Note that this code contains dependencies on external services such as Weights a
 Assuming all of the dependencies are in place such as an account on Weights and Biases one can execute experiments by each dataset or all at once.
 
 ## Running an experiment for all datasets
-To do this simply clone the repo and change to its directory and execute:
+To do this simply clone the repo, change to its directory, and execute:
 
 ```
 ./run_all_tests
@@ -15,7 +15,7 @@ To do this simply clone the repo and change to its directory and execute:
 This will download the needed data and execute what we considered a single experiment in the paper.
 
 ## Running an experiment for a specific datasets
-To do this, clone the repo and change to its directory and execute:
+To do this, clone the repo, change to its directory, and execute:
 
 ```
 ./download_data
@@ -23,3 +23,6 @@ To do this, clone the repo and change to its directory and execute:
 ```
 
 where you replace <dataset to run> with one of the dataset run scripts in the repo such as run_ctu13_scenario_5
+
+## Finding Data
+After performing an experiment the resulting data can be found in the ./output/ directory.
